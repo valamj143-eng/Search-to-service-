@@ -77,7 +77,7 @@ const SB=supabase.createClient("https://kcpgrwbxiaqrxomytjjk.supabase.co","sb_pu
 const $=i=>document.getElementById(i);
 const e=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const CATS=["લોકો","દુકાનો","કારીગરો","કંપની","શિક્ષણ","ખેતી","વસ્તુઓ","સેવાઓ","નોકરી","ગામ"];
-const PQ="*,profiles(name,avatar,phone),likes(user_id),comments(id)";
+const PQ="*,profiles!posts_user_id_fkey(name,avatar,phone),likes(user_id),comments(id)";
 let ME=null,mode="login",st;
 const AUTH_MAIL="valamj143";
 const em=p=>AUTH_MAIL+"+"+p+"@gmail.com";
@@ -128,7 +128,7 @@ async function like(id,b){const m=b.dataset.m==="1";let n=+b.dataset.n;b.disable
  const r=m?await SB.from("likes").delete().match({post_id:id,user_id:ME.id}):await SB.from("likes").insert({post_id:id,user_id:ME.id});
  b.disabled=false;if(r.error)return toast(r.error.message);n+=m?-1:1;b.dataset.n=n;b.dataset.m=m?0:1;b.className=m?"":"on";b.textContent="👍 "+(n||"")+" પસંદ"}
 async function tgC(id){const box=$("cm"+id);if(box.innerHTML){box.innerHTML="";return}
- const {data}=await SB.from("comments").select("*,profiles(name,avatar)").eq("post_id",id).order("created_at");
+ const {data}=await SB.from("comments").select("*,profiles!comments_user_id_fkey(name,avatar)").eq("post_id",id).order("created_at");
  box.innerHTML='<div style="margin-top:8px">'+(data||[]).map(x=>`<div class="ph" style="align-items:flex-start;margin-bottom:6px">${av(x.profiles)}<div style="background:var(--bg);padding:6px 10px;border-radius:12px"><b>${e((x.profiles||{}).name)}</b> <small style="display:inline">${ago(x.created_at)}</small><div>${e(x.body)}</div></div>${x.user_id===ME.id?`<button class="x" onclick="delCm(${x.id},${id})" aria-label="કાઢો">✕</button>`:""}</div>`).join("")+`<div class="row"><input id="ci${id}" maxlength="300" placeholder="કોમેન્ટ લખો..."><button onclick="addCm(${id})">મોકલો</button></div></div>`}
 async function addCm(id){const t=$("ci"+id).value.trim();if(!t)return;const r=await SB.from("comments").insert({post_id:id,user_id:ME.id,body:t});if(r.error)return toast(r.error.message);$("cm"+id).innerHTML="";tgC(id)}
 async function delCm(cid,pid){const r=await SB.from("comments").delete().eq("id",cid);if(r.error)return toast(r.error.message);$("cm"+pid).innerHTML="";tgC(pid)}
