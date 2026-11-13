@@ -35,7 +35,8 @@ summary{cursor:pointer}
 .x{background:none;color:var(--mu);padding:2px 6px}
 .empty{text-align:center;color:var(--mu);padding:22px}
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--cd);border-top:1px solid var(--bd);display:flex;padding:4px 0 calc(4px + env(safe-area-inset-bottom,0px))}
-.bnav a{flex:1;text-align:center;font-size:11px;color:var(--mu)}.bnav a span{display:block;font-size:20px;line-height:1.3}.bnav a.on{color:var(--or);font-weight:600}
+.bnav a{flex:1;text-align:center;font-size:11px;color:var(--mu)}.bnav a span{display:block;font-size:20px;line-height:1.3}.bnav a.on{color:var(--or);font-weight:600}.bnav a{position:relative}
+.bg{display:none;position:absolute;top:0;left:56%;background:#d93025;color:#fff;border-radius:10px;font-size:10px;line-height:15px;padding:0 5px;font-style:normal}
 #tt{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s;z-index:120;pointer-events:none;max-width:90%;text-align:center}
 #splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%,#263e60,#172033 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s}
 #splash.out{opacity:0;pointer-events:none}
@@ -65,10 +66,10 @@ summary{cursor:pointer}
 <button type="submit" id="abtn" style="width:100%;margin-top:12px">લોગીન</button></form>
 <div class="msg" id="amsg"></div></div></div>
 
-<header>SEARCH <b>TO</b> SERVICE</header>
+<header style="display:flex;justify-content:space-between;align-items:center"><span>SEARCH <b>TO</b> SERVICE</span><a href="#search" aria-label="શોધો">🔍</a></header>
 <main id="app"></main>
 <nav class="bnav">
-<a href="#home" data-v="home"><span>🏠</span>હોમ</a><a href="#search" data-v="search"><span>🔍</span>શોધો</a><a href="#post" data-v="post"><span>➕</span>પોસ્ટ</a><a href="#me" data-v="me"><span>👤</span>પ્રોફાઇલ</a></nav>
+<a href="#home" data-v="home"><span>🏠</span>હોમ</a><a href="#friends" data-v="friends"><span>👥</span>મિત્રો</a><a href="#post" data-v="post"><span>➕</span>પોસ્ટ</a><a href="#notif" data-v="notif"><span>🔔</span>સૂચના<i class="bg" id="nb"></i></a><a href="#me" data-v="me"><span>👤</span>પ્રોફાઇલ</a></nav>
 <div id="tt"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -145,7 +146,7 @@ async function doPost(){const t=$("pt").value.trim(),f=$("pf").files[0];if(!t&&!
 function rs(v){clearTimeout(st);st=setTimeout(async()=>{const q=v.replace(/[,()%*]/g,"").trim();let b=SB.from("profiles").select("*").limit(40);
  if(q)b=b.or(`name.ilike.%${q}%,work.ilike.%${q}%,village.ilike.%${q}%,cat.ilike.%${q}%`);
  const {data,error}=await b,el=$("res");if(!el)return;if(error){el.innerHTML='<div class="empty">'+e(error.message)+'</div>';return}
- el.innerHTML=(data||[]).map(u=>`<div class="c"><div class="ph">${av(u)}<div><b>${e(u.name)}</b><small>${e(u.cat)} ${e(u.work)}${u.village?" · 📍"+e(u.village):""}</small></div></div>${u.bio?`<p class="pt">${e(u.bio)}</p>`:""}${u.id!==ME.id&&u.phone?`<div class="pa"><a href="tel:${e(u.phone)}">📞 કોલ</a><a href="https://wa.me/91${e(u.phone)}" target="_blank" rel="noopener">💬 WhatsApp</a></div>`:""}</div>`).join("")||'<div class="empty">કોઈ મળ્યું નહીં.</div>'},300)}
+ el.innerHTML=(data||[]).map(u=>`<div class="c"><div class="ph">${av(u)}<div><b>${e(u.name)}</b><small>${e(u.cat)} ${e(u.work)}${u.village?" · 📍"+e(u.village):""}</small></div></div>${u.bio?`<p class="pt">${e(u.bio)}</p>`:""}${u.id!==ME.id&&u.phone?`<div class="pa"><a href="tel:${e(u.phone)}">📞 કોલ</a><a href="https://wa.me/91${e(u.phone)}" target="_blank" rel="noopener">💬 WhatsApp</a><button onclick="fr('add','${u.id}')">👥 મિત્ર</button></div>`:""}</div>`).join("")||'<div class="empty">કોઈ મળ્યું નહીં.</div>'},300)}
 async function saveProf(){const f=$("ef").files[0];let a=ME.avatar;if(f){const m=await upMedia(f);if(!m||m.type!=="image")return;a=m.url}
  const r=await SB.from("profiles").update({name:$("en").value.trim()||ME.name,bio:$("eb").value.trim(),cat:$("ec").value,work:$("ew").value.trim(),village:$("ev").value.trim(),avatar:a}).eq("id",ME.id).select().single();
  if(r.error)return toast(r.error.message);ME=r.data;toast("સેવ થઈ ગયું");route()}
@@ -167,12 +168,38 @@ async function meP(){const {data}=await SB.from("posts").select(PQ).eq("user_id"
 <button style="margin-top:10px" onclick="saveProf()">સેવ કરો</button></details>
 <div class="c"><div class="row"><button class="alt" onclick="logout()">🚪 લોગઆઉટ</button><button class="red" onclick="delAcc()">⚠️ એકાઉન્ટ ડિલીટ</button></div></div>
 <h3 style="margin:4px 2px">મારી પોસ્ટ</h3>`+((data||[]).map(pcard).join("")||'<div class="empty">હજી કોઈ પોસ્ટ નથી.</div>')}
-const P={home:homeP,search:searchP,post:postP,me:meP};
+/* ---------- friends + notifications ---------- */
+async function fr(a,x){let r;
+ if(a==="add")r=await SB.from("friendships").insert({requester:ME.id,addressee:x});
+ else if(a==="accept")r=await SB.from("friendships").update({status:"accepted"}).eq("id",x);
+ else r=await SB.from("friendships").delete().eq("id",x);
+ if(r.error)return toast(/duplicate|unique/i.test(r.error.message)?"વિનંતી પહેલેથી છે":r.error.message);
+ toast(a==="add"?"વિનંતી મોકલી":"થઈ ગયું");route()}
+async function friendsP(){
+ const f=await SB.from("friendships").select("*").or(`requester.eq.${ME.id},addressee.eq.${ME.id}`);if(f.error)throw f.error;
+ const F=f.data||[],inc=F.filter(x=>x.status==="pending"&&x.addressee===ME.id),out=F.filter(x=>x.status==="pending"&&x.requester===ME.id),ok=F.filter(x=>x.status==="accepted");
+ const ids=new Set([ME.id]);F.forEach(x=>{ids.add(x.requester);ids.add(x.addressee)});
+ const pr=await SB.from("profiles").select("*").limit(200),all=pr.data||[],M=Object.fromEntries(all.map(u=>[u.id,u])),sug=all.filter(u=>!ids.has(u.id)).slice(0,30);
+ const row=(u,btns)=>u?`<div class="c"><div class="ph">${av(u)}<div><b>${e(u.name)}</b><small>${e(u.work||u.cat)}${u.village?" · 📍"+e(u.village):""}</small></div></div><div class="row" style="margin-top:8px">${btns}</div></div>`:"";
+ const H=t=>`<h3 style="margin:12px 2px 6px">${t}</h3>`;
+ return H("મિત્ર વિનંતીઓ ("+inc.length+")")+(inc.map(x=>row(M[x.requester],`<button onclick="fr('accept',${x.id})">Confirm</button><button class="alt" onclick="fr('del',${x.id})">Delete</button>`)).join("")||'<div class="c empty">કોઈ નવી વિનંતી નથી.</div>')
+ +(out.length?H("તમે મોકલેલી વિનંતી")+out.map(x=>row(M[x.addressee],`<button class="alt" onclick="fr('del',${x.id})">વિનંતી રદ કરો</button>`)).join(""):"")
+ +H("તમે ઓળખતા હશો")+(sug.map(u=>row(u,`<button onclick="fr('add','${u.id}')">Add friend</button>`)).join("")||'<div class="c empty">હાલ કોઈ સૂચન નથી.</div>')
+ +H("મારા મિત્રો ("+ok.length+")")+(ok.map(x=>{const u=M[x.requester===ME.id?x.addressee:x.requester];return row(u,`${u&&u.phone?`<a class="btn" href="tel:${e(u.phone)}">📞 કોલ</a>`:""}<button class="alt" onclick="fr('del',${x.id})">Remove</button>`)}).join("")||'<div class="c empty">હજી કોઈ મિત્ર નથી.</div>')}
+function setBadge(n){const b=$("nb");if(b){b.textContent=n>9?"9+":n;b.style.display=n?"block":"none"}}
+async function badge(){if(!ME)return;const r=await SB.from("notifications").select("id",{count:"exact",head:true}).eq("read",false);setBadge(r.count||0)}
+async function notifP(){const r=await SB.from("notifications").select("*,profiles!notifications_actor_id_fkey(name,avatar)").order("created_at",{ascending:false}).limit(50);if(r.error)throw r.error;
+ const L=r.data||[],T={friend_request:"એ તમને મિત્ર વિનંતી મોકલી",friend_accepted:"એ તમારી મિત્ર વિનંતી સ્વીકારી",like:"ને તમારી પોસ્ટ પસંદ આવી",comment:"એ તમારી પોસ્ટ પર કોમેન્ટ કરી"};
+ const h=L.map(x=>`<div class="c ph" style="${x.read?"":"background:rgba(255,121,0,.12)"}">${av(x.profiles)}<div><b>${e((x.profiles||{}).name)}</b> ${T[x.kind]||""}<small>${ago(x.created_at)}</small></div></div>`).join("")||'<div class="c empty">કોઈ સૂચના નથી.</div>';
+ if(L.some(x=>!x.read)){await SB.from("notifications").update({read:true}).eq("read",false);setBadge(0)}
+ return h}
+setInterval(badge,60000);
+const P={home:homeP,search:searchP,post:postP,me:meP,friends:friendsP,notif:notifP};
 async function route(){if(!ME)return;const h=(location.hash||"#home").slice(1),v=P[h]?h:"home";
  document.querySelectorAll(".bnav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
  $("app").innerHTML='<div class="empty">લોડ થાય છે...</div>';
  try{$("app").innerHTML=await P[v]()}catch(x){$("app").innerHTML='<div class="empty">ભૂલ: '+e(x.message)+'</div>'}
- if(v==="search")rs("");window.scrollTo(0,0)}
+ if(v==="search")rs("");if(v!=="notif")badge();window.scrollTo(0,0)}
 window.addEventListener("hashchange",route);
 setTimeout(async()=>{try{await boot()}catch(x){$("auth").style.display="flex";aerr("સર્વર સાથે જોડાણ થયું નહીં: "+x.message)}
  $("splash").classList.add("out");setTimeout(()=>$("splash").remove(),500)},2400);
