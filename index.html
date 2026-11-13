@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEARCH TO SERVICE</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--or:#ff7900;--bg:#f0f2f5;--cd:#fff;--tx:#1c2333;--mu:#65708a;--bd:#e2e6ee}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1624;--cd:#18223a;--tx:#eef2f8;--mu:#9aa6bb;--bd:#27334f;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 "Noto Sans Gujarati",Shruti,Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+body.locked header,body.locked main,body.locked .bnav{display:none}
+header{position:sticky;top:0;z-index:20;background:#172033;color:#fff;padding:12px 14px;font-weight:800;font-size:16px}
+header b,.brand b{color:#ffb52e}
+main{max-width:640px;margin:auto;padding:10px 10px 84px}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px}
+.c h3{margin:0 0 6px;font-size:15px}
+.mu,small{color:var(--mu);font-size:12px}small{display:block}
+.row{display:flex;gap:6px;align-items:center}
+.ph{display:flex;gap:9px;align-items:center}.ph>div{flex:1;min-width:0}
+.av{width:38px;height:38px;border-radius:50%;background:var(--or);color:#fff;display:inline-grid;place-items:center;font-weight:800;object-fit:cover;flex:none}
+.av.l{width:72px;height:72px;font-size:28px}
+button,.btn{background:var(--or);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5}
+.alt{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}.red{background:#d93025}
+input,select,textarea{width:100%;border:1px solid var(--bd);border-radius:8px;padding:9px 10px;font:inherit;background:var(--bg);color:var(--tx)}
+label{display:grid;gap:3px;font-size:12px;font-weight:600;margin-top:8px}
+summary{cursor:pointer}
+.pt{margin:8px 0 0;white-space:pre-wrap}
+.c img:not(.av),.c video{width:100%;max-height:460px;object-fit:cover;border-radius:8px;margin-top:8px;background:#000}
+.pa{display:flex;border-top:1px solid var(--bd);margin-top:10px;padding-top:4px}
+.pa button,.pa a{flex:1;background:none;color:var(--mu);text-align:center;padding:6px 0}.pa .on{color:var(--or)}
+.x{background:none;color:var(--mu);padding:2px 6px}
+.empty{text-align:center;color:var(--mu);padding:22px}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--cd);border-top:1px solid var(--bd);display:flex;padding:4px 0 calc(4px + env(safe-area-inset-bottom,0px))}
+.bnav a{flex:1;text-align:center;font-size:11px;color:var(--mu)}.bnav a span{display:block;font-size:20px;line-height:1.3}.bnav a.on{color:var(--or);font-weight:600}
+#tt{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s;z-index:120;pointer-events:none;max-width:90%;text-align:center}
+#splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%,#263e60,#172033 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s}
+#splash.out{opacity:0;pointer-events:none}
+.lens{width:88px;height:88px;border-radius:50%;border:8px solid #ff7900;position:relative;margin-bottom:46px;animation:scan 1.1s ease-out both}
+.lens::after{content:"";position:absolute;width:12px;height:42px;background:#ff7900;border-radius:6px;right:-16px;bottom:-28px;transform:rotate(-45deg)}
+@keyframes scan{0%{transform:translateX(-50px) scale(.3);opacity:0}30%{opacity:1;transform:translateX(-50px) scale(1)}60%{transform:translateX(50px)}85%,100%{transform:translateX(0)}}
+.word{font-size:28px;font-weight:800;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:0 16px}.word .to{color:#ffb52e}
+.w{opacity:0;animation:up .6s ease forwards}@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#splash .tag{margin-top:12px;color:#d9e3f2}
+@media(prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}}
+#auth{display:none;position:fixed;inset:0;z-index:90;background:linear-gradient(135deg,#172033,#263e60);align-items:center;justify-content:center;overflow:auto;padding:16px}
+.abox{background:var(--cd);border-radius:16px;padding:20px;width:min(400px,100%);margin:auto}
+.msg{display:none;padding:9px;border-radius:8px;background:#fdecec;color:#c0392b;margin-top:8px}
+</style>
+</head>
+<body class="locked">
+<div id="splash"><div class="lens"></div><div class="word"><span class="w" style="animation-delay:1s">SEARCH</span><span class="w to" style="animation-delay:1.3s">TO</span><span class="w" style="animation-delay:1.6s">SERVICE</span></div><div class="tag w" style="animation-delay:2s">શોધો બધું • મેળવો સેવા</div></div>
+
+<div id="auth"><div class="abox">
+<div class="brand" style="text-align:center;font-size:21px;font-weight:800">SEARCH <b>TO</b> SERVICE</div>
+<p class="mu" style="text-align:center">લોગીન કરો અથવા નવું એકાઉન્ટ બનાવો</p>
+<div class="row"><button type="button" id="tl" style="flex:1" onclick="authMode('login')">લોગીન</button><button type="button" id="tr" class="alt" style="flex:1" onclick="authMode('reg')">નવું એકાઉન્ટ</button></div>
+<form onsubmit="auth(event);return false">
+<label id="nl" style="display:none">તમારું નામ<input id="aName" maxlength="50"></label>
+<label>મોબાઇલ નંબર<input id="aPhone" type="tel" inputmode="numeric" required pattern="[0-9]{10}" maxlength="10" placeholder="10 આંકડા"></label>
+<label>પાસવર્ડ<input id="aPass" type="password" required minlength="6" placeholder="ઓછામાં ઓછા 6 અક્ષર"></label>
+<button type="submit" id="abtn" style="width:100%;margin-top:12px">લોગીન</button></form>
+<div class="msg" id="amsg"></div></div></div>
+
+<header>SEARCH <b>TO</b> SERVICE</header>
+<main id="app"></main>
+<nav class="bnav">
+<a href="#home" data-v="home"><span>🏠</span>હોમ</a><a href="#search" data-v="search"><span>🔍</span>શોધો</a><a href="#post" data-v="post"><span>➕</span>પોસ્ટ</a><a href="#me" data-v="me"><span>👤</span>પ્રોફાઇલ</a></nav>
+<div id="tt"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB=supabase.createClient("https://kcpgrwbxiaqrxomytjjk.supabase.co","sb_publishable_507kAwJoOKBnuN7QYRYjpw_l7LVVqWW");
+const $=i=>document.getElementById(i);
+const e=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CATS=["લોકો","દુકાનો","કારીગરો","કંપની","શિક્ષણ","ખેતી","વસ્તુઓ","સેવાઓ","નોકરી","ગામ"];
+const PQ="*,profiles(name,avatar,phone),likes(user_id),comments(id)";
+let ME=null,mode="login",st;
+const em=p=>"p"+p+"@searchtoservice.app";
+const ago=t=>{const m=(Date.now()-new Date(t))/6e4;return m<1?"હમણાં":m<60?(m|0)+" મિનિટ પહેલા":m<1440?(m/60|0)+" કલાક પહેલા":(m/1440|0)+" દિવસ પહેલા"};
+function toast(t){const x=$("tt");x.textContent=t;x.style.opacity=1;clearTimeout(x._t);x._t=setTimeout(()=>x.style.opacity=0,2600)}
+const av=(u,l)=>u&&u.avatar?`<img class="av${l?" l":""}" src="${e(u.avatar)}" alt="">`:`<span class="av${l?" l":""}">${e(((u&&u.name)||"?")[0])}</span>`;
+
+/* ---------- login ---------- */
+function authMode(m){mode=m;const r=m==="reg";$("tl").className=r?"alt":"";$("tr").className=r?"":"alt";$("tl").style.flex=$("tr").style.flex="1";$("nl").style.display=r?"grid":"none";$("aName").required=r;$("abtn").textContent=r?"એકાઉન્ટ બનાવો":"લોગીન";$("amsg").style.display="none"}
+function aerr(t){const m=$("amsg");m.textContent=t;m.style.display="block"}
+async function auth(ev){ev.preventDefault();const ph=$("aPhone").value.trim(),pw=$("aPass").value,nm=$("aName").value.trim();$("amsg").style.display="none";$("abtn").disabled=true;
+ try{
+  if(mode==="reg"){
+   const r=await SB.auth.signUp({email:em(ph),password:pw});
+   if(r.error)return aerr(/registered/i.test(r.error.message)?"આ નંબરથી એકાઉન્ટ પહેલેથી છે. લોગીન કરો.":r.error.message);
+   if(!r.data.session)return aerr("Supabase માં Confirm email બંધ કરવું પડશે.");
+   const q=await SB.from("profiles").insert({id:r.data.user.id,phone:ph,name:nm});if(q.error)return aerr(q.error.message)
+  }else{
+   const r=await SB.auth.signInWithPassword({email:em(ph),password:pw});if(r.error)return aerr("મોબાઇલ નંબર અથવા પાસવર્ડ ખોટો છે.")
+  }
+  await boot()
+ }catch(x){aerr("જોડાણ ભૂલ: "+x.message)}finally{$("abtn").disabled=false}}
+async function boot(){
+ const {data}=await SB.auth.getSession(),s=data.session;
+ if(!s){ME=null;document.body.classList.add("locked");$("auth").style.display="flex";return}
+ let q=await SB.from("profiles").select("*").eq("id",s.user.id).maybeSingle();ME=q.data;
+ if(!ME){q=await SB.from("profiles").insert({id:s.user.id,phone:(s.user.email||"").replace(/^p/,"").split("@")[0],name:"નવો સભ્ય"}).select().single();ME=q.data}
+ if(!ME){$("auth").style.display="flex";return aerr("પ્રોફાઇલ બની નહીં. ફરી પ્રયાસ કરો.")}
+ document.body.classList.remove("locked");$("auth").style.display="none";route()}
+async function logout(){await SB.auth.signOut();ME=null;document.body.classList.add("locked");authMode("login");$("auth").style.display="flex"}
+async function delAcc(){if(!confirm("એકાઉન્ટ અને બધો ડેટા કાયમ માટે ડિલીટ થશે. ચાલુ રાખવું?"))return;
+ const l=await SB.storage.from("media").list(ME.id);if(l.data&&l.data.length)await SB.storage.from("media").remove(l.data.map(x=>ME.id+"/"+x.name));
+ const r=await SB.rpc("delete_my_account");if(r.error)return toast(r.error.message);await logout();toast("એકાઉન્ટ ડિલીટ થયું")}
+
+/* ---------- media ---------- */
+function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const s=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(r,"image/jpeg",.78)};i.onerror=()=>r(null);i.src=URL.createObjectURL(f)})}
+async function upMedia(f){const v=f.type.startsWith("video");if(v&&f.size>20e6){toast("વિડિયો 20MB થી નાનો રાખો");return null}
+ const b=v?f:await shrink(f);if(!b){toast("ફાઇલ ખુલી નહીં");return null}
+ const ext=v?((f.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4"):"jpg",path=ME.id+"/"+Date.now()+"."+ext;
+ const r=await SB.storage.from("media").upload(path,b,{contentType:v?(f.type||"video/mp4"):"image/jpeg"});
+ if(r.error){toast("અપલોડ ભૂલ: "+r.error.message);return null}
+ return{url:SB.storage.from("media").getPublicUrl(path).data.publicUrl,type:v?"video":"image"}}
+
+/* ---------- posts ---------- */
+function pcard(p){const u=p.profiles||{},l=p.likes||[],mine=l.some(x=>x.user_id===ME.id),own=p.user_id===ME.id;
+ return `<article class="c"><div class="ph">${av(u)}<div><b>${e(u.name)}</b><small>${ago(p.created_at)}</small></div>${own?`<button class="x" onclick="delPost(${p.id})" aria-label="ડિલીટ">🗑</button>`:""}</div>${p.body?`<p class="pt">${e(p.body)}</p>`:""}${p.media_url?(p.media_type==="video"?`<video src="${e(p.media_url)}" controls playsinline preload="metadata"></video>`:`<img src="${e(p.media_url)}" alt="" loading="lazy">`):""}<div class="pa"><button class="${mine?"on":""}" data-n="${l.length}" data-m="${mine?1:0}" onclick="like(${p.id},this)">👍 ${l.length||""} પસંદ</button><button onclick="tgC(${p.id})">💬 ${(p.comments||[]).length||""} કોમેન્ટ</button>${!own&&u.phone?`<a href="tel:${e(u.phone)}">📞 કોલ</a>`:""}</div><div id="cm${p.id}"></div></article>`}
+async function like(id,b){const m=b.dataset.m==="1";let n=+b.dataset.n;b.disabled=true;
+ const r=m?await SB.from("likes").delete().match({post_id:id,user_id:ME.id}):await SB.from("likes").insert({post_id:id,user_id:ME.id});
+ b.disabled=false;if(r.error)return toast(r.error.message);n+=m?-1:1;b.dataset.n=n;b.dataset.m=m?0:1;b.className=m?"":"on";b.textContent="👍 "+(n||"")+" પસંદ"}
+async function tgC(id){const box=$("cm"+id);if(box.innerHTML){box.innerHTML="";return}
+ const {data}=await SB.from("comments").select("*,profiles(name,avatar)").eq("post_id",id).order("created_at");
+ box.innerHTML='<div style="margin-top:8px">'+(data||[]).map(x=>`<div class="ph" style="align-items:flex-start;margin-bottom:6px">${av(x.profiles)}<div style="background:var(--bg);padding:6px 10px;border-radius:12px"><b>${e((x.profiles||{}).name)}</b> <small style="display:inline">${ago(x.created_at)}</small><div>${e(x.body)}</div></div>${x.user_id===ME.id?`<button class="x" onclick="delCm(${x.id},${id})" aria-label="કાઢો">✕</button>`:""}</div>`).join("")+`<div class="row"><input id="ci${id}" maxlength="300" placeholder="કોમેન્ટ લખો..."><button onclick="addCm(${id})">મોકલો</button></div></div>`}
+async function addCm(id){const t=$("ci"+id).value.trim();if(!t)return;const r=await SB.from("comments").insert({post_id:id,user_id:ME.id,body:t});if(r.error)return toast(r.error.message);$("cm"+id).innerHTML="";tgC(id)}
+async function delCm(cid,pid){const r=await SB.from("comments").delete().eq("id",cid);if(r.error)return toast(r.error.message);$("cm"+pid).innerHTML="";tgC(pid)}
+async function delPost(id){if(!confirm("આ પોસ્ટ ડિલીટ કરવી છે?"))return;
+ const g=await SB.from("posts").select("media_url").eq("id",id).maybeSingle(),u=g.data&&g.data.media_url;
+ const r=await SB.from("posts").delete().eq("id",id);if(r.error)return toast(r.error.message);
+ if(u&&u.includes("/media/"))SB.storage.from("media").remove([decodeURIComponent(u.split("/media/")[1])]);route()}
+async function doPost(){const t=$("pt").value.trim(),f=$("pf").files[0];if(!t&&!f)return toast("કંઈક લખો અથવા ફોટો/વિડિયો પસંદ કરો");
+ $("pb").disabled=true;let m=null;if(f){m=await upMedia(f);if(!m){$("pb").disabled=false;return}}
+ const r=await SB.from("posts").insert({user_id:ME.id,body:t,media_url:m&&m.url,media_type:m&&m.type});
+ if(r.error){$("pb").disabled=false;return toast(r.error.message)}toast("પોસ્ટ થઈ ગઈ");location.hash="home"}
+
+/* ---------- search + profile ---------- */
+function rs(v){clearTimeout(st);st=setTimeout(async()=>{const q=v.replace(/[,()%*]/g,"").trim();let b=SB.from("profiles").select("*").limit(40);
+ if(q)b=b.or(`name.ilike.%${q}%,work.ilike.%${q}%,village.ilike.%${q}%,cat.ilike.%${q}%`);
+ const {data,error}=await b,el=$("res");if(!el)return;if(error){el.innerHTML='<div class="empty">'+e(error.message)+'</div>';return}
+ el.innerHTML=(data||[]).map(u=>`<div class="c"><div class="ph">${av(u)}<div><b>${e(u.name)}</b><small>${e(u.cat)} ${e(u.work)}${u.village?" · 📍"+e(u.village):""}</small></div></div>${u.bio?`<p class="pt">${e(u.bio)}</p>`:""}${u.id!==ME.id&&u.phone?`<div class="pa"><a href="tel:${e(u.phone)}">📞 કોલ</a><a href="https://wa.me/91${e(u.phone)}" target="_blank" rel="noopener">💬 WhatsApp</a></div>`:""}</div>`).join("")||'<div class="empty">કોઈ મળ્યું નહીં.</div>'},300)}
+async function saveProf(){const f=$("ef").files[0];let a=ME.avatar;if(f){const m=await upMedia(f);if(!m||m.type!=="image")return;a=m.url}
+ const r=await SB.from("profiles").update({name:$("en").value.trim()||ME.name,bio:$("eb").value.trim(),cat:$("ec").value,work:$("ew").value.trim(),village:$("ev").value.trim(),avatar:a}).eq("id",ME.id).select().single();
+ if(r.error)return toast(r.error.message);ME=r.data;toast("સેવ થઈ ગયું");route()}
+
+/* ---------- pages ---------- */
+async function homeP(){const {data,error}=await SB.from("posts").select(PQ).order("created_at",{ascending:false}).limit(50);if(error)throw error;
+ return `<div class="c ph" onclick="location.hash='post'" style="cursor:pointer">${av(ME)}<span class="mu" style="flex:1;background:var(--bg);padding:9px 12px;border-radius:20px">શું શેર કરવું છે, ${e(ME.name.split(" ")[0])}?</span></div>`+((data||[]).map(pcard).join("")||'<div class="c empty">હજી કોઈ પોસ્ટ નથી. પહેલી પોસ્ટ તમે કરો!</div>')}
+function searchP(){return '<div class="c"><input placeholder="🔍 નામ, કામ, ગામ..." oninput="rs(this.value)"></div><div id="res"></div>'}
+function postP(){return '<div class="c"><h3>નવી પોસ્ટ</h3><textarea id="pt" rows="4" maxlength="500" placeholder="તમારા વ્યવસાય, સેવા કે વાત વિશે લખો..."></textarea><label>📷 ફોટો / 🎥 વિડિયો (20MB સુધી)<input id="pf" type="file" accept="image/*,video/*"></label><button id="pb" style="width:100%;margin-top:10px" onclick="doPost()">પોસ્ટ કરો</button></div>'}
+async function meP(){const {data}=await SB.from("posts").select(PQ).eq("user_id",ME.id).order("created_at",{ascending:false});
+ return `<div class="c"><div class="ph">${av(ME,1)}<div><b style="font-size:17px">${e(ME.name)}</b><small>📱 ${e(ME.phone)}</small><small>${e(ME.cat)} ${e(ME.work)}${ME.village?" · 📍"+e(ME.village):""}</small></div></div>${ME.bio?`<p class="pt">${e(ME.bio)}</p>`:""}</div>
+<details class="c"><summary><b>✏️ પ્રોફાઇલ એડિટ</b></summary>
+<label>નામ<input id="en" value="${e(ME.name)}"></label>
+<label>થોડું તમારા વિશે<textarea id="eb" rows="2" maxlength="150">${e(ME.bio)}</textarea></label>
+<label>કેટેગરી<select id="ec"><option value="">પસંદ કરો</option>${CATS.map(c=>`<option${ME.cat===c?" selected":""}>${c}</option>`).join("")}</select></label>
+<label>કામ / સેવા (શોધમાં દેખાશે)<input id="ew" value="${e(ME.work)}" placeholder="દા.ત. ઇલેક્ટ્રિશિયન"></label>
+<label>ગામ / શહેર<input id="ev" value="${e(ME.village)}"></label>
+<label>પ્રોફાઇલ ફોટો<input id="ef" type="file" accept="image/*"></label>
+<button style="margin-top:10px" onclick="saveProf()">સેવ કરો</button></details>
+<div class="c"><div class="row"><button class="alt" onclick="logout()">🚪 લોગઆઉટ</button><button class="red" onclick="delAcc()">⚠️ એકાઉન્ટ ડિલીટ</button></div></div>
+<h3 style="margin:4px 2px">મારી પોસ્ટ</h3>`+((data||[]).map(pcard).join("")||'<div class="empty">હજી કોઈ પોસ્ટ નથી.</div>')}
+const P={home:homeP,search:searchP,post:postP,me:meP};
+async function route(){if(!ME)return;const h=(location.hash||"#home").slice(1),v=P[h]?h:"home";
+ document.querySelectorAll(".bnav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
+ $("app").innerHTML='<div class="empty">લોડ થાય છે...</div>';
+ try{$("app").innerHTML=await P[v]()}catch(x){$("app").innerHTML='<div class="empty">ભૂલ: '+e(x.message)+'</div>'}
+ if(v==="search")rs("");window.scrollTo(0,0)}
+window.addEventListener("hashchange",route);
+setTimeout(async()=>{try{await boot()}catch(x){$("auth").style.display="flex";aerr("સર્વર સાથે જોડાણ થયું નહીં: "+x.message)}
+ $("splash").classList.add("out");setTimeout(()=>$("splash").remove(),500)},2400);
+</script>
+</body>
+</html>
