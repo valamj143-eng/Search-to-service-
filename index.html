@@ -79,7 +79,8 @@ const e=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;","
 const CATS=["લોકો","દુકાનો","કારીગરો","કંપની","શિક્ષણ","ખેતી","વસ્તુઓ","સેવાઓ","નોકરી","ગામ"];
 const PQ="*,profiles(name,avatar,phone),likes(user_id),comments(id)";
 let ME=null,mode="login",st;
-const em=p=>"p"+p+"@searchtoservice.app";
+const AUTH_MAIL="valamj143";
+const em=p=>AUTH_MAIL+"+"+p+"@gmail.com";
 const ago=t=>{const m=(Date.now()-new Date(t))/6e4;return m<1?"હમણાં":m<60?(m|0)+" મિનિટ પહેલા":m<1440?(m/60|0)+" કલાક પહેલા":(m/1440|0)+" દિવસ પહેલા"};
 function toast(t){const x=$("tt");x.textContent=t;x.style.opacity=1;clearTimeout(x._t);x._t=setTimeout(()=>x.style.opacity=0,2600)}
 const av=(u,l)=>u&&u.avatar?`<img class="av${l?" l":""}" src="${e(u.avatar)}" alt="">`:`<span class="av${l?" l":""}">${e(((u&&u.name)||"?")[0])}</span>`;
@@ -103,7 +104,7 @@ async function boot(){
  const {data}=await SB.auth.getSession(),s=data.session;
  if(!s){ME=null;document.body.classList.add("locked");$("auth").style.display="flex";return}
  let q=await SB.from("profiles").select("*").eq("id",s.user.id).maybeSingle();ME=q.data;
- if(!ME){q=await SB.from("profiles").insert({id:s.user.id,phone:(s.user.email||"").replace(/^p/,"").split("@")[0],name:"નવો સભ્ય"}).select().single();ME=q.data}
+ if(!ME){q=await SB.from("profiles").insert({id:s.user.id,phone:(s.user.email||"").split("@")[0].split("+")[1]||"",name:"નવો સભ્ય"}).select().single();ME=q.data}
  if(!ME){$("auth").style.display="flex";return aerr("પ્રોફાઇલ બની નહીં. ફરી પ્રયાસ કરો.")}
  document.body.classList.remove("locked");$("auth").style.display="none";route()}
 async function logout(){await SB.auth.signOut();ME=null;document.body.classList.add("locked");authMode("login");$("auth").style.display="flex"}
